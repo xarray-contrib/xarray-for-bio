@@ -1,14 +1,16 @@
-# Office Hours
+# Getting Help
+
+## Office Hours
 
 The Chan Zuckerberg Institute has generously funded an Xarray Community Developer position. As part of this role the current developer, Ian Hunt-Isaak, holds online office hours every other week. 
 
-## Are office hours for you?
+### Are office hours for you?
 
 Yes! Anyone interested in the intersection of `Xarray` and biological scientific computing is welcome. If you have barely heard of `Xarray` and are curious about the benefits you should come. On the other end of the spectrum if you are an advanced user with a complicated question or bug you should also come.
 
 
 
-## When and Where
+### When and Where
 
 The office hours occur every two weeks swapping between two different times in order to be available to a range of time zones. The meetings occur in the google meet link attached to the calendar.
 

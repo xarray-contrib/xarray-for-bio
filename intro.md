@@ -11,22 +11,22 @@ If you would like submit a use case, package, or other improvement please open a
 :gutter: 2
 
 :::{grid-item-card} 
-:link: office-hours
+:link: getting-help
 :link-type: doc
 Getting Help ❓
 ^^^
-See the [Getting Help](getting-help) page for office hours and one on one help.
+See the Getting Help page for office hours and one on one help.
 :::
 
-:::{grid-item-card} Two!
-Here's the second card.
+
+:::{grid-item-card} 
+:link: existing-software
+:link-type: doc
+Software Using `Xarray`
+^^^
+A list of Biology software tools that support or use `Xarray`.
 :::
 
 ::::
 
 
-```{tableofcontents}
-office-hours
-one-on-one
-contributing
-```
