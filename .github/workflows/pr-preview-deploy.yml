@@ -1,0 +1,60 @@
+name: Deploy PR Preview
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
+
+concurrency: preview-${{ github.ref }}
+
+jobs:
+  build-and-preview:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write  # Allow commenting on PRs
+    steps:
+    - uses: actions/checkout@v4
+
+    # Install uv for faster dependency management
+    - name: Install uv
+      if: github.event.action != 'closed'
+      uses: astral-sh/setup-uv@v4
+      with:
+        enable-cache: true
+
+    # Set up Python using uv
+    - name: Set up Python
+      if: github.event.action != 'closed'
+      run: uv python install 3.11
+
+    # Install dependencies using uv
+    - name: Install dependencies
+      if: github.event.action != 'closed'
+      run: uv sync
+
+    # Cache executed notebooks between runs
+    - name: Cache executed notebooks
+      if: github.event.action != 'closed'
+      uses: actions/cache@v4
+      with:
+        path: _build/.jupyter_cache
+        key: jupyter-book-cache-${{ hashFiles('uv.lock') }}
+
+    # Build the book
+    - name: Build the book
+      if: github.event.action != 'closed'
+      run: |
+        uv run jupyter-book build .
+
+    # Deploy PR Preview using rossjrw/pr-preview-action
+    - name: Deploy PR Preview
+      uses: rossjrw/pr-preview-action@v1
+      with:
+        source-dir: _build/html/
+        preview-branch: gh-pages
+        umbrella-dir: pr-preview
+        action: auto
+        token: ${{ secrets.GITHUB_TOKEN }}
