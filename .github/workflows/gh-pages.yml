@@ -23,15 +23,19 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    # Install dependencies
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v5
+    # Install uv for faster dependency management
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
       with:
-        python-version: '3.11'
-        cache: pip # Implicitly uses requirements.txt for cache key
+        enable-cache: true
 
+    # Set up Python using uv
+    - name: Set up Python
+      run: uv python install 3.11
+
+    # Install dependencies using uv
     - name: Install dependencies
-      run: pip install -r requirements.txt
+      run: uv sync
 
     # (optional) Cache your executed notebooks between runs
     # if you have config:
@@ -41,12 +45,12 @@ jobs:
       uses: actions/cache@v4
       with:
         path: _build/.jupyter_cache
-        key: jupyter-book-cache-${{ hashFiles('requirements.txt') }}
+        key: jupyter-book-cache-${{ hashFiles('uv.lock') }}
 
     # Build the book
     - name: Build the book
       run: |
-        jupyter-book build .
+        uv run jupyter-book build .
 
     # Upload the book's HTML as an artifact
     - name: Upload artifact

@@ -1,0 +1,14 @@
+[project]
+name = "xarray-for-biology"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "flox>=0.10.6",
+    "jupyter-book>=1.0.4.post1",
+    "jupyterlab>=4.4.7",
+    "matplotlib>=3.10.6",
+    "numpy>=2.3.2",
+    "xarray>=2025.8.0",
+]
