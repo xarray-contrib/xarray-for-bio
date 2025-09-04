@@ -7,3 +7,6 @@ chapters:
 - file: getting-help
 - file: existing-software
 - file: contributing
+- file: gallery
+  sections:
+  - file: gallery/2d_groupby
