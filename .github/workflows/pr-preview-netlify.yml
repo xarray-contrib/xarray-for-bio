@@ -1,0 +1,56 @@
+name: Deploy PR Preview to Netlify
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write  # To comment on the PR
+    steps:
+    - uses: actions/checkout@v4
+
+    # Install uv for faster dependency management
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
+      with:
+        enable-cache: true
+
+    # Set up Python using uv
+    - name: Set up Python
+      run: uv python install 3.11
+
+    # Install dependencies using uv
+    - name: Install dependencies
+      run: uv sync
+
+    # Cache executed notebooks between runs
+    - name: Cache executed notebooks
+      uses: actions/cache@v4
+      with:
+        path: _build/.jupyter_cache
+        key: jupyter-book-cache-${{ hashFiles('uv.lock') }}
+
+    # Build the book
+    - name: Build the book
+      run: |
+        uv run jupyter-book build .
+
+    # Deploy to Netlify
+    - name: Deploy to Netlify
+      uses: nwtgck/actions-netlify@v3.0
+      with:
+        publish-dir: './_build/html'
+        production-deploy: false
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        deploy-message: "Deploy PR ${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}"
+        enable-pull-request-comment: true
+        enable-commit-comment: false
+        overwrites-pull-request-comment: true
+        alias: pr-${{ github.event.pull_request.number }}
+      env:
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      timeout-minutes: 5
